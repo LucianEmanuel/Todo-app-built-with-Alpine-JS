@@ -23,7 +23,7 @@ Users should be able to:
 ### Links
 
 - Solution URL: [Add solution URL here](https://github.com/LucianEmanuel/Todo-app-built-with-Alpine-JS)
-- Live Site URL: [Add live site URL here](https://your-live-site-url.com)
+- Live Site URL: [Add live site URL here](https://lucianemanuel.github.io/Todo-app-built-with-Alpine-JS/)
 
 ## My process
 
