@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- displays site properly based on user's device -->
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png" />
+    <!-- Google font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;700&display=swap" rel="stylesheet" />
+    <!-- Alpine JS - Persist Plugin-->
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Alpine JS-->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+
+    <title>Frontend Mentor | Todo app</title>
+</head>
+
+<body class="dark-theme" x-data="{ theme: false }" x-bind:class="{ 'light-theme': theme }">
+    <main class="main-content" x-data="{ todos: $persist([]).as('todos'), userInput: '', selection: [] }">
+        <header class="header flex">
+            <h1>todo</h1>
+            <button class="theme-switcher btn" x-on:click="theme = ! theme">
+
+            </button>
+        </header>
+        <section class="bg-list">
+            <form class="add-item flex" x-on:submit.prevent>
+                <button
+                    @click="if(userInput.trim().length>0) 
+            todos.push({name: userInput, completed:false }); userInput=''"
+                    type="submit" class="btn check"></button>
+                <input x-model="userInput" type="text" placeholder="Create new todo.." name="input-text"
+                    id="input-text" />
+            </form>
+        </section>
+        <section class="items-list" x-init="selection = todos">
+            <ul class="items-container bg-list" 
+            x-data="{ startIndex: 0, endIndex: 0, selectedIndex: null, changeIndex(x, y) {
+                    [selection[x], selection[y]] = [selection[y], selection[x]] } }">
+                <template x-for="(todo, index) in selection">
+                    <li class="item flex" draggable="true"
+                        x-on:dragstart="startIndex = index"
+                        x-on:dragover.prevent="selectedIndex = index"
+                        x-on:drop="endIndex = index; changeIndex(startIndex, endIndex);  selectedIndex = null ">
+                        <div class="list-item flex">
+                            <span x-on:click="todo.completed = ! todo.completed"
+                                x-bind:class="{ 'active-check': todo.completed }" class="check"></span>
+                            <span class="text completed" x-text="todo.name"
+                                x-bind:class="{ 'completed': todo.completed }">Text 1</span>
+                        </div>
+                        <button
+                            @click="todos = selection.filter(currentTodo => currentTodo !== todo); selection = todos"
+                            class="btn delete-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18">
+                                <path fill="#494C6B" fill-rule="evenodd"
+                                    d="M16.97 0l.708.707L9.546 8.84l8.132 8.132-.707.707-8.132-8.132-8.132 8.132L0 16.97l8.132-8.132L0 .707.707 0 8.84 8.132 16.971 0z" />
+                            </svg>
+                        </button>
+                    </li>
+                </template>
+            </ul>
+            <div class="action flex ">
+                <p class="item-info">
+                    <span class="items-left" x-text="selection.filter((todo) =>!todo.completed).length"></span>
+                    items left
+                </p>
+
+                <div class="action-btns" x-data="{ activeBtn: 1 }">
+                    <button class="btn action-btn" x-on:click="selection = todos; activeBtn = 1"
+                        x-bind:class="{ 'active-btn': activeBtn === 1 }">
+                        All
+                    </button>
+                    <button class="btn action-btn"
+                        x-on:click="selection = todos.filter((todo) => !todo.completed); activeBtn = 2"
+                        x-bind:class="activeBtn === 2 ? 'active-btn' : ''">
+                        Active
+                    </button>
+                    <button class="btn action-btn"
+                        x-on:click="selection = todos.filter((todo) => todo.completed); activeBtn = 3 "
+                        x-bind:class="activeBtn === 3 ? 'active-btn' : ''">
+                        Completed
+                    </button>
+                </div>
+                <button class="btn action-btn"
+                    x-on:click="todos = todos.filter((todo) => !todo.completed); selection = todos">
+                    Clear Completed
+                </button>
+            </div>
+        </section>
+        <div class="mobile-action-btns flex bg-list" x-data="{ activeBtn: 1 }">
+            <button class="btn action-btn" x-on:click="selection = todos; activeBtn = 1"
+                x-bind:class="{ 'active-btn': activeBtn === 1 }">
+                All
+            </button>
+            <button class="btn action-btn"
+                x-on:click="selection = todos.filter((todo) => !todo.completed); activeBtn = 2"
+                x-bind:class="activeBtn === 2 ? 'active-btn' : ''">
+                Active
+            </button>
+            <button class="btn action-btn"
+                x-on:click="selection = todos.filter((todo) => todo.completed); activeBtn = 3 "
+                x-bind:class="activeBtn === 3 ? 'active-btn' : ''">
+                Completed
+            </button>
+        </div>
+
+        </div>
+    </main>
+    <p class="footer-text">Drag and drop to reorder list</p>
+ 
+</body>
+
+</html>
